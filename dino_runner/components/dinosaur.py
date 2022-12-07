@@ -96,4 +96,3 @@ class Dinosaur(Sprite):
         
     def draw(self, screen):
         screen.blit(self.image, (self.dino_rect.x, self.dino_rect.y))
-
