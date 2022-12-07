@@ -33,14 +33,8 @@ class Game:
             self.events()           
             self.update()       
             self.draw()
-
-
-    def execute(self):
-        while self.running:
-            
-            if not self.playing:
-                self.show_menu()       
-
+        pygame.quit()
+      
     def events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
