@@ -1,11 +1,11 @@
-from dino_runner.components.obstacles.cactus import SmallCactus, LargeCactus
-from dino_runner.components.obstacles.Bird import Bird
+from dino_runner.components.obstacles.bird import Bird
+from dino_runner.components.obstacles.cactus import Cactus
 from dino_runner.utils.constants import (
     SMALL_CACTUS, LARGE_CACTUS, BIRD
 )
 from dino_runner.components.dinosaur import Dinosaur
 import random
-import  pygame
+import pygame
 
 
 class ObstacleManager:
@@ -13,33 +13,33 @@ class ObstacleManager:
     def __init__(self):
         self.obstacles = []
 
-
     def update(self, game):
-        #if len(self.obstacles) == 0:
-        #    cactus_size = random.randint(0,2)
-        #    if cactus_size == 0:
-        #        self.obstacles.append(LargeCactus(LARGE_CACTUS))
-        #    elif cactus_size ==1:
-        #        self.obstacles.append(SmallCactus(SMALL_CACTUS))
-             
+        
         if len(self.obstacles) == 0:
-            if random.randint(0, 2) == 0:
-                self.obstacles.append(SmallCactus(SMALL_CACTUS))
-            elif random.randint(0, 2) == 1:
-                self.obstacles.append(LargeCactus(LARGE_CACTUS))
-            elif random.randint(0, 2) == 2:
-                self.obstacles.append(Bird(BIRD))
-
-                    
+            obstacle = random.randint(0,3)
+            if obstacle == 0:
+                self.obstacles.append(Cactus(LARGE_CACTUS, "cactus"))
+            elif obstacle == 1:
+                self.obstacles.append(Cactus(SMALL_CACTUS, "cactus"))
+            else:
+                self.obstacles.append(Bird(BIRD, "bird"))
+            
         
         for obstacle in self.obstacles:
             obstacle.update(game.game_speed, self.obstacles)
-            if game.player.dino_rect.colliderect(obstacle.rect):
-                pygame.time.delay(100)
-               
-                game.playing = False
-                   
-                break
+            if game.player.dino_rect.colliderect(obstacle.rect) and game.player.shield == False:
+                game.show_message("¡CUIDADO!")
+                self.obstacles = []
+                game.player_heart_manager.reduce_heart()
+                if game.player_heart_manager.heart_count > 0:
+                    game.player.show_text = False
+                else: 
+                    pygame.time.delay(2000)
+                    game.playing = False
+                    game.death_count +=1
+                    break
+            elif game.player.dino_rect.colliderect(obstacle.rect) and game.player.shield == True:
+                game.show_message("¡GENIAL!")
 
 
     def draw(self, screen):

@@ -1,20 +1,15 @@
 from dino_runner.components.obstacles.obstacle import Obstacle
 import random
-
+import pygame
+from pygame.sprite import Sprite
 
 
 class Bird(Obstacle):
-
-    BIRD_HEIGHTS = [250, 290, 320]
-
-    def __init__(self, image):
+     BIRD_HEIGHTS = [250, 290, 320]
+     def __init__(self, image, description):
+        self.image = image
         self.type = 0
-        super().__init__(image, self.type)
+        self.description = description
+        super().__init__(self.image, self.type, self.description)
         self.rect.y = random.choice(self.BIRD_HEIGHTS)
         self.index = 0
-
-    def draw(self, SCREEN):
-        if self.index >= 9:
-            self.index = 0
-        SCREEN.blit(self.image[self.index // 5], self.rect)
-        self.index += 1
